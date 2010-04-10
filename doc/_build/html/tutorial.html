@@ -1,0 +1,143 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &mdash; potrace v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="potrace v0.1 documentation" href="index.html" />
+    <link rel="next" title="potrace – API reference" href="classes.html" />
+    <link rel="prev" title="Welcome to potrace’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="classes.html" title="potrace – API reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to potrace’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">potrace v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>Here is a simple example using potrace:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">potrace</span>
+
+<span class="c"># Make a numpy array with a rectangle in the middle</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">32</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span><span class="mi">32</span><span class="o">-</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c"># Create a bitmap from the array</span>
+<span class="n">bmp</span> <span class="o">=</span> <span class="n">potrace</span><span class="o">.</span><span class="n">Bitmap</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c"># Trace the bitmap to a path</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">bmp</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
+
+<span class="c"># Iterate over path curves</span>
+<span class="k">for</span> <span class="n">curve</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;start_point =&quot;</span><span class="p">,</span> <span class="n">curve</span><span class="o">.</span><span class="n">start_point</span>
+    <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">curve</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">segment</span>
+        <span class="n">end_point_x</span><span class="p">,</span> <span class="n">end_point_y</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">end_point</span>
+        <span class="k">if</span> <span class="n">segment</span><span class="o">.</span><span class="n">is_corner</span><span class="p">:</span>
+            <span class="n">c_x</span><span class="p">,</span> <span class="n">c_y</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">c</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c1_x</span><span class="p">,</span> <span class="n">c1_y</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">c1</span>
+            <span class="n">c2_x</span><span class="p">,</span> <span class="n">c2_y</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">c2</span>
+</pre></div>
+</div>
+<p>The main class is <a title="potrace.Bitmap" class="reference external" href="classes.html#potrace.Bitmap"><tt class="xref docutils literal"><span class="pre">Bitmap</span></tt></a>. You pass its constructor a 2D numpy array,
+and you call its <a title="potrace.Bitmap.trace" class="reference external" href="classes.html#potrace.Bitmap.trace"><tt class="xref docutils literal"><span class="pre">trace</span></tt></a> method to convert it to a
+<a title="potrace.Path" class="reference external" href="classes.html#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> object.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to potrace&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="classes.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">potrace</span></tt> &#8211; API reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="classes.html" title="potrace – API reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to potrace’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">potrace v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Luper Rouch.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+    </div>
+  </body>
+</html>

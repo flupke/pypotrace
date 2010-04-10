@@ -8,13 +8,22 @@ import numpy as np
 # Number of pixels in a word
 cdef int N = sizeof(potrace_word) * 8
 
+# Constants
+TURNPOLICY_BLACK = POTRACE_TURNPOLICY_BLACK
+TURNPOLICY_WHITE = POTRACE_TURNPOLICY_WHITE
+TURNPOLICY_LEFT = POTRACE_TURNPOLICY_LEFT
+TURNPOLICY_RIGHT = POTRACE_TURNPOLICY_RIGHT
+TURNPOLICY_MINORITY = POTRACE_TURNPOLICY_MINORITY
+TURNPOLICY_MAJORITY = POTRACE_TURNPOLICY_MAJORITY
+TURNPOLICY_RANDOM = POTRACE_TURNPOLICY_RANDOM
+
 
 class PotraceError(Exception): pass
 
 
 cdef class Bitmap:
     """
-    Represents a bitmap.
+    Create a Bitmap instance.
 
     The constructor *data* argument should be a 2D numpy array containing pixel
     data. Pixels are only interpreted as zero or nonzero.
@@ -35,9 +44,56 @@ cdef class Bitmap:
     def trace(self, turdsize=2, turnpolicy=POTRACE_TURNPOLICY_MINORITY,
             alphamax=1.0, opticurve=1, opttolerance=0.2, progress_func=None):
         """
-        Trace the bitmap.
+        Trace the bitmap and wrap the result in a :class:`Path` instance.
 
-        Returns an Path instance containing the traced result.
+        The *turdsize* parameter can be used to "despeckle" the bitmap to be
+        traced, by removing all curves whose enclosed area is below the given
+        threshold. The current default for the *turdsize* parameter is 2; its
+        useful range is from 0 to infinity.
+
+        The *turnpolicy* parameter determines how to resolve ambiguities during
+        decomposition of bitmaps into paths. The possible choices for the
+        *turnpolicy* parameter are:
+        
+        * :const:`TURNPOLICY_BLACK`: prefers to connect black
+          (foreground) components.
+
+        * :const:`TURNPOLICY_WHITE`: prefers to connect white
+          (background) components.
+        
+        * :const:`TURNPOLICY_LEFT`: always take a left turn.
+
+        * :const:`TURNPOLICY_RIGHT`: always take a right turn.
+
+        * :const:`TURNPOLICY_MINORITY`: prefers to connect the color
+          (black or white) that occurs least frequently in a local neighborhood
+          of the current position.
+
+        * :const:`TURNPOLICY_MAJORITY`: prefers to connect the color 
+          (black or white) that occurs most frequently in a local neighborhood
+          of the current position.
+
+        * :const:`TURNPOLICY_RANDOM`: choose randomly.
+        
+        The current default policy is :const:`TURNPOLICY_MINORITY`, which tends
+        to keep visual lines connected.
+
+        The *alphamax* parameter is a threshold for the detection of corners.
+        It controls the smoothness of the traced curve. The current default is
+        1.0; useful range of this parameter is from 0.0 (polygon) to 1.3333
+        (no corners).
+
+        The *opticurve* parameter is a boolean flag that controls whether
+        Potrace will attempt to "simplify" the final curve by reducing the
+        number of Bezier curve segments.  Opticurve=1 turns on optimization,
+        and *opticurve=0* turns it off. The current default is on.
+
+        The *opttolerance* parameter defines the amount of error allowed in
+        this simplification. The current default is 0.2. Larger values tend to
+        decrease the number of segments, at the expense of less accuracy. The
+        useful range is from 0 to infinity, although in practice one would
+        hardly choose values greater than 1 or so. For most purposes, the
+        default value is a good tradeoff between space and accuracy.
         """
         cdef Parameters params = Parameters(turdsize=turdsize,
                 turnpolicy=turnpolicy, alphamax=alphamax, opticurve=opticurve,
@@ -83,7 +139,7 @@ cdef class Parameters:
 
     def __cinit__(self, int turdsize=2, 
             int turnpolicy=POTRACE_TURNPOLICY_MINORITY, double alphamax=1.0, 
-            int opticurve=1, double opttolerance=0.2):
+            int opticurve=1, double opttolerance=0.2, *args, **kwargs):
         self.po_params = potrace_param_default()
         self.po_params.turdsize = turdsize
         self.po_params.turnpolicy = turnpolicy
@@ -135,20 +191,39 @@ cdef class State:
 
 
 cdef class BezierSegment:
+    """
+    Represents a Bezier segment in a :class:`Curve` object.
+    """
 
     cdef potrace_dpoint_s _c1, _c2, _end_point
 
     property c1:
+        """
+        Starting point Bezier control point.
+        """
         def __get__(self):
             return (self._c1.x, self._c1.y)
 
     property c2:
+        """
+        End point Bezier control point.
+        """
         def __get__(self):
             return (self._c2.x, self._c2.y)
 
     property end_point:
+        """
+        Segment end point.
+        """
         def __get__(self):
             return (self._end_point.x, self._end_point.y)
+
+    property is_corner:
+        """
+        Always False.
+        """
+        def __get__(self):
+            return False
 
     def __repr__(self):
         return "BezierSegment(c1=%s, c2=%s, end_point=%s)" % (self.c1,
@@ -165,16 +240,32 @@ cdef class BezierSegment:
 
 
 cdef class CornerSegment:
+    """
+    Represents a corner segment in a :class:`Curve` object.
+    """
 
     cdef potrace_dpoint_s _c, _end_point
 
     property c:
+        """
+        Segment corner point.
+        """
         def __get__(self):
             return (self._c.x, self._c.y)
 
     property end_point:
+        """
+        Segment end point.
+        """
         def __get__(self):
             return (self._end_point.x, self._end_point.y)
+
+    property is_corner:
+        """
+        Always True.
+        """
+        def __get__(self):
+            return True
 
     def __repr__(self):
         return "CornerSegment(c=%s, end_point=%s)" % (self.c, self.end_point)
@@ -188,6 +279,12 @@ cdef class CornerSegment:
 
 
 cdef class Curve:
+    """
+    Curve objects represent closed, non intersecting curves.
+
+    Curves are made of a list of :class:`BezierSegment` and
+    :class:`CornerSegment` objects connected to each other.
+    """
 
     cdef public object segments
 
@@ -195,6 +292,9 @@ cdef class Curve:
         self.segments = []
 
     property start_point:
+        """
+        The curve starting point.
+        """
         def __get__(self):
             return self.segments[-1].end_point
 
@@ -214,6 +314,9 @@ cdef class Curve:
 
 
 cdef class Path:
+    """
+    Path objects store a list of :class:`Curve` objects.
+    """
 
     cdef object curves
 
@@ -235,7 +338,6 @@ cdef class Path:
 
     def __iter__(self):
         return iter(self.curves)
-
 
 
 def potracelib_version():
@@ -278,4 +380,7 @@ cdef Path path_from_ptr(potrace_path_s *plist):
     return path
 
 
-__all__ = ["Bitmap", "potracelib_version"]
+__all__ = ["TURNPOLICY_BLACK", "TURNPOLICY_WHITE", "TURNPOLICY_LEFT",
+    "TURNPOLICY_RIGHT", "TURNPOLICY_MINORITY", "TURNPOLICY_MAJORITY",
+    "TURNPOLICY_RANDOM", "Bitmap", "Path", "Curve", "BezierSegment",
+    "CornerSegment", "potracelib_version"]

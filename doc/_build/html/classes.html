@@ -1,0 +1,304 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>potrace – API reference &mdash; potrace v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="potrace v0.1 documentation" href="index.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">potrace v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-potrace">
+<h1><a title="" class="reference external" href="#module-potrace"><tt class="xref docutils literal"><span class="pre">potrace</span></tt></a> &#8211; API reference<a class="headerlink" href="#module-potrace" title="Permalink to this headline">¶</a></h1>
+<p>All objects properties are read only, unless otherwise noted. Points are
+returned as tuples of <em>(x, y)</em> values.</p>
+<p>Constants for <a title="potrace.Bitmap.trace" class="reference internal" href="#potrace.Bitmap.trace"><tt class="xref docutils literal"><span class="pre">Bitmap.trace()</span></tt></a> <em>turnpolicy</em> parameter:</p>
+<dl class="data">
+<dt id="potrace.TURNPOLICY_BLACK">
+<tt class="descclassname">potrace.</tt><tt class="descname">TURNPOLICY_BLACK</tt><a class="headerlink" href="#potrace.TURNPOLICY_BLACK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="potrace.TURNPOLICY_WHITE">
+<tt class="descclassname">potrace.</tt><tt class="descname">TURNPOLICY_WHITE</tt><a class="headerlink" href="#potrace.TURNPOLICY_WHITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="potrace.TURNPOLICY_LEFT">
+<tt class="descclassname">potrace.</tt><tt class="descname">TURNPOLICY_LEFT</tt><a class="headerlink" href="#potrace.TURNPOLICY_LEFT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="potrace.TURNPOLICY_RIGHT">
+<tt class="descclassname">potrace.</tt><tt class="descname">TURNPOLICY_RIGHT</tt><a class="headerlink" href="#potrace.TURNPOLICY_RIGHT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="potrace.TURNPOLICY_MINORITY">
+<tt class="descclassname">potrace.</tt><tt class="descname">TURNPOLICY_MINORITY</tt><a class="headerlink" href="#potrace.TURNPOLICY_MINORITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="potrace.TURNPOLICY_MAJORITY">
+<tt class="descclassname">potrace.</tt><tt class="descname">TURNPOLICY_MAJORITY</tt><a class="headerlink" href="#potrace.TURNPOLICY_MAJORITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="potrace.TURNPOLICY_RANDOM">
+<tt class="descclassname">potrace.</tt><tt class="descname">TURNPOLICY_RANDOM</tt><a class="headerlink" href="#potrace.TURNPOLICY_RANDOM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="section" id="bitmap">
+<h2>Bitmap<a class="headerlink" href="#bitmap" title="Permalink to this headline">¶</a></h2>
+<p>You start a trace by creating a <a title="potrace.Bitmap" class="reference internal" href="#potrace.Bitmap"><tt class="xref docutils literal"><span class="pre">Bitmap</span></tt></a> instance, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">potrace</span> <span class="kn">import</span> <span class="n">Bitmap</span>
+
+<span class="c"># Initialize data, for example convert a PIL image to a numpy array</span>
+<span class="c"># [...]</span>
+
+<span class="n">bitmap</span> <span class="o">=</span> <span class="n">Bitmap</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">bitmap</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="potrace.Bitmap">
+<em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">Bitmap</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#potrace.Bitmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Bitmap instance.</p>
+<p>The constructor <em>data</em> argument should be a 2D numpy array containing pixel
+data. Pixels are only interpreted as zero or nonzero.</p>
+<dl class="method">
+<dt id="potrace.Bitmap.trace">
+<tt class="descname">trace</tt><big>(</big><span class="optional">[</span><em>turdsize</em>, <em>turnpolicy</em>, <em>alphamax</em>, <em>opticurve</em>, <em>opttolerance</em>, <em>progress_func</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#potrace.Bitmap.trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trace the bitmap and wrap the result in a <a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> instance.</p>
+<p>The <em>turdsize</em> parameter can be used to &#8220;despeckle&#8221; the bitmap to be
+traced, by removing all curves whose enclosed area is below the given
+threshold. The current default for the <em>turdsize</em> parameter is 2; its
+useful range is from 0 to infinity.</p>
+<p>The <em>turnpolicy</em> parameter determines how to resolve ambiguities during
+decomposition of bitmaps into paths. The possible choices for the
+<em>turnpolicy</em> parameter are:</p>
+<ul class="simple">
+<li><a title="potrace.TURNPOLICY_BLACK" class="reference internal" href="#potrace.TURNPOLICY_BLACK"><tt class="xref docutils literal"><span class="pre">TURNPOLICY_BLACK</span></tt></a>: prefers to connect black
+(foreground) components.</li>
+<li><a title="potrace.TURNPOLICY_WHITE" class="reference internal" href="#potrace.TURNPOLICY_WHITE"><tt class="xref docutils literal"><span class="pre">TURNPOLICY_WHITE</span></tt></a>: prefers to connect white
+(background) components.</li>
+<li><a title="potrace.TURNPOLICY_LEFT" class="reference internal" href="#potrace.TURNPOLICY_LEFT"><tt class="xref docutils literal"><span class="pre">TURNPOLICY_LEFT</span></tt></a>: always take a left turn.</li>
+<li><a title="potrace.TURNPOLICY_RIGHT" class="reference internal" href="#potrace.TURNPOLICY_RIGHT"><tt class="xref docutils literal"><span class="pre">TURNPOLICY_RIGHT</span></tt></a>: always take a right turn.</li>
+<li><a title="potrace.TURNPOLICY_MINORITY" class="reference internal" href="#potrace.TURNPOLICY_MINORITY"><tt class="xref docutils literal"><span class="pre">TURNPOLICY_MINORITY</span></tt></a>: prefers to connect the color
+(black or white) that occurs least frequently in a local neighborhood
+of the current position.</li>
+<li><a title="potrace.TURNPOLICY_MAJORITY" class="reference internal" href="#potrace.TURNPOLICY_MAJORITY"><tt class="xref docutils literal"><span class="pre">TURNPOLICY_MAJORITY</span></tt></a>: prefers to connect the color 
+(black or white) that occurs most frequently in a local neighborhood
+of the current position.</li>
+<li><a title="potrace.TURNPOLICY_RANDOM" class="reference internal" href="#potrace.TURNPOLICY_RANDOM"><tt class="xref docutils literal"><span class="pre">TURNPOLICY_RANDOM</span></tt></a>: choose randomly.</li>
+</ul>
+<p>The current default policy is <a title="potrace.TURNPOLICY_MINORITY" class="reference internal" href="#potrace.TURNPOLICY_MINORITY"><tt class="xref docutils literal"><span class="pre">TURNPOLICY_MINORITY</span></tt></a>, which tends
+to keep visual lines connected.</p>
+<p>The <em>alphamax</em> parameter is a threshold for the detection of corners.
+It controls the smoothness of the traced curve. The current default is
+1.0; useful range of this parameter is from 0.0 (polygon) to 1.3333
+(no corners).</p>
+<p>The <em>opticurve</em> parameter is a boolean flag that controls whether
+Potrace will attempt to &#8220;simplify&#8221; the final curve by reducing the
+number of Bezier curve segments.  Opticurve=1 turns on optimization,
+and <em>opticurve=0</em> turns it off. The current default is on.</p>
+<p>The <em>opttolerance</em> parameter defines the amount of error allowed in
+this simplification. The current default is 0.2. Larger values tend to
+decrease the number of segments, at the expense of less accuracy. The
+useful range is from 0 to infinity, although in practice one would
+hardly choose values greater than 1 or so. For most purposes, the
+default value is a good tradeoff between space and accuracy.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="path">
+<h2>Path<a class="headerlink" href="#path" title="Permalink to this headline">¶</a></h2>
+<p><a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> instances are returned by <a title="potrace.Bitmap.trace" class="reference internal" href="#potrace.Bitmap.trace"><tt class="xref docutils literal"><span class="pre">Bitmap.trace()</span></tt></a>:</p>
+<dl class="class">
+<dt id="potrace.Path">
+<em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">Path</tt><a class="headerlink" href="#potrace.Path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path objects store a list of <a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> objects.</p>
+<dl class="attribute">
+<dt id="potrace.Path.curves">
+<tt class="descname">curves</tt><a class="headerlink" href="#potrace.Path.curves" title="Permalink to this definition">¶</a></dt>
+<dd>The list of <a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> objects composing the path.</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="curve">
+<h2>Curve<a class="headerlink" href="#curve" title="Permalink to this headline">¶</a></h2>
+<p><a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> objects are the basic components of <a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> objects.</p>
+<dl class="class">
+<dt id="potrace.Curve">
+<em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">Curve</tt><a class="headerlink" href="#potrace.Curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Curve objects represent closed, non intersecting curves.</p>
+<p>Curves are made of a list of <a title="potrace.BezierSegment" class="reference internal" href="#potrace.BezierSegment"><tt class="xref docutils literal"><span class="pre">BezierSegment</span></tt></a> and
+<a title="potrace.CornerSegment" class="reference internal" href="#potrace.CornerSegment"><tt class="xref docutils literal"><span class="pre">CornerSegment</span></tt></a> objects connected to each other.</p>
+<dl class="attribute">
+<dt id="potrace.Curve.segments">
+<tt class="descname">segments</tt><a class="headerlink" href="#potrace.Curve.segments" title="Permalink to this definition">¶</a></dt>
+<dd>The list of segment objects that compose the curve.</dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.Curve.start_point">
+<tt class="descname">start_point</tt><a class="headerlink" href="#potrace.Curve.start_point" title="Permalink to this definition">¶</a></dt>
+<dd>The curve starting point.</dd></dl>
+
+</dd></dl>
+
+<p>Segments can be either <a title="potrace.BezierSegment" class="reference internal" href="#potrace.BezierSegment"><tt class="xref docutils literal"><span class="pre">BezierSegment</span></tt></a> or <a title="potrace.CornerSegment" class="reference internal" href="#potrace.CornerSegment"><tt class="xref docutils literal"><span class="pre">CornerSegment</span></tt></a>
+objects. Both have a <tt class="xref docutils literal"><span class="pre">is_corner</span></tt> attribute to determine their type
+easily.</p>
+<dl class="class">
+<dt id="potrace.BezierSegment">
+<em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">BezierSegment</tt><a class="headerlink" href="#potrace.BezierSegment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a Bezier segment in a <a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> object.</p>
+<dl class="attribute">
+<dt id="potrace.BezierSegment.c1">
+<tt class="descname">c1</tt><a class="headerlink" href="#potrace.BezierSegment.c1" title="Permalink to this definition">¶</a></dt>
+<dd>Starting point Bezier control point.</dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.BezierSegment.c2">
+<tt class="descname">c2</tt><a class="headerlink" href="#potrace.BezierSegment.c2" title="Permalink to this definition">¶</a></dt>
+<dd>End point Bezier control point.</dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.BezierSegment.end_point">
+<tt class="descname">end_point</tt><a class="headerlink" href="#potrace.BezierSegment.end_point" title="Permalink to this definition">¶</a></dt>
+<dd>Segment end point.</dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.BezierSegment.is_corner">
+<tt class="descname">is_corner</tt><a class="headerlink" href="#potrace.BezierSegment.is_corner" title="Permalink to this definition">¶</a></dt>
+<dd>Always False.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="potrace.CornerSegment">
+<em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">CornerSegment</tt><a class="headerlink" href="#potrace.CornerSegment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a corner segment in a <a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> object.</p>
+<dl class="attribute">
+<dt id="potrace.CornerSegment.c">
+<tt class="descname">c</tt><a class="headerlink" href="#potrace.CornerSegment.c" title="Permalink to this definition">¶</a></dt>
+<dd>Segment corner point.</dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.CornerSegment.end_point">
+<tt class="descname">end_point</tt><a class="headerlink" href="#potrace.CornerSegment.end_point" title="Permalink to this definition">¶</a></dt>
+<dd>Segment end point.</dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.CornerSegment.is_corner">
+<tt class="descname">is_corner</tt><a class="headerlink" href="#potrace.CornerSegment.is_corner" title="Permalink to this definition">¶</a></dt>
+<dd>Always True.</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">potrace</span></tt> &#8211; API reference</a><ul>
+<li><a class="reference external" href="#bitmap">Bitmap</a></li>
+<li><a class="reference external" href="#path">Path</a></li>
+<li><a class="reference external" href="#curve">Curve</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">Tutorial</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/classes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">potrace v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Luper Rouch.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+    </div>
+  </body>
+</html>
