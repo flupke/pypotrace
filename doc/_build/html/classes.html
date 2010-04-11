@@ -48,8 +48,11 @@
             
   <div class="section" id="module-potrace">
 <h1><a title="" class="reference external" href="#module-potrace"><tt class="xref docutils literal"><span class="pre">potrace</span></tt></a> &#8211; API reference<a class="headerlink" href="#module-potrace" title="Permalink to this headline">¶</a></h1>
-<p>All objects properties are read only, unless otherwise noted. Points are
-returned as tuples of <em>(x, y)</em> values.</p>
+<dl class="function">
+<dt id="potrace.potracelib_version">
+<tt class="descclassname">potrace.</tt><tt class="descname">potracelib_version</tt><big>(</big><big>)</big><a class="headerlink" href="#potrace.potracelib_version" title="Permalink to this definition">¶</a></dt>
+<dd>Return the potrace library version.</dd></dl>
+
 <p>Constants for <a title="potrace.Bitmap.trace" class="reference internal" href="#potrace.Bitmap.trace"><tt class="xref docutils literal"><span class="pre">Bitmap.trace()</span></tt></a> <em>turnpolicy</em> parameter:</p>
 <dl class="data">
 <dt id="potrace.TURNPOLICY_BLACK">
@@ -153,7 +156,7 @@ default value is a good tradeoff between space and accuracy.</p>
 </div>
 <div class="section" id="path">
 <h2>Path<a class="headerlink" href="#path" title="Permalink to this headline">¶</a></h2>
-<p><a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> instances are returned by <a title="potrace.Bitmap.trace" class="reference internal" href="#potrace.Bitmap.trace"><tt class="xref docutils literal"><span class="pre">Bitmap.trace()</span></tt></a>:</p>
+<p><a title="potrace.Bitmap.trace" class="reference internal" href="#potrace.Bitmap.trace"><tt class="xref docutils literal"><span class="pre">Bitmap.trace()</span></tt></a> returns <a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> instances, containing</p>
 <dl class="class">
 <dt id="potrace.Path">
 <em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">Path</tt><a class="headerlink" href="#potrace.Path" title="Permalink to this definition">¶</a></dt>
@@ -187,9 +190,13 @@ default value is a good tradeoff between space and accuracy.</p>
 
 </dd></dl>
 
-<p>Segments can be either <a title="potrace.BezierSegment" class="reference internal" href="#potrace.BezierSegment"><tt class="xref docutils literal"><span class="pre">BezierSegment</span></tt></a> or <a title="potrace.CornerSegment" class="reference internal" href="#potrace.CornerSegment"><tt class="xref docutils literal"><span class="pre">CornerSegment</span></tt></a>
-objects. Both have a <tt class="xref docutils literal"><span class="pre">is_corner</span></tt> attribute to determine their type
-easily.</p>
+<p>There are two types of segments, <a title="potrace.BezierSegment" class="reference internal" href="#potrace.BezierSegment"><tt class="xref docutils literal"><span class="pre">BezierSegment</span></tt></a>:</p>
+<img alt="_images/bezier.png" src="_images/bezier.png" />
+<p>and <a title="potrace.CornerSegment" class="reference internal" href="#potrace.CornerSegment"><tt class="xref docutils literal"><span class="pre">CornerSegment</span></tt></a>:</p>
+<img alt="_images/corner.png" src="_images/corner.png" />
+<p>Since curves are always closed, segments only store their control points and
+end point; their starting point is always the previous segment&#8217;s end point. You
+can check the <tt class="xref docutils literal"><span class="pre">is_corner</span></tt> attribute to determine their type easily.</p>
 <dl class="class">
 <dt id="potrace.BezierSegment">
 <em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">BezierSegment</tt><a class="headerlink" href="#potrace.BezierSegment" title="Permalink to this definition">¶</a></dt>
@@ -197,22 +204,22 @@ easily.</p>
 <dl class="attribute">
 <dt id="potrace.BezierSegment.c1">
 <tt class="descname">c1</tt><a class="headerlink" href="#potrace.BezierSegment.c1" title="Permalink to this definition">¶</a></dt>
-<dd>Starting point Bezier control point.</dd></dl>
+<dd>The segment&#8217;s starting point control point.</dd></dl>
 
 <dl class="attribute">
 <dt id="potrace.BezierSegment.c2">
 <tt class="descname">c2</tt><a class="headerlink" href="#potrace.BezierSegment.c2" title="Permalink to this definition">¶</a></dt>
-<dd>End point Bezier control point.</dd></dl>
+<dd>The segment&#8217;s end point control point.</dd></dl>
 
 <dl class="attribute">
 <dt id="potrace.BezierSegment.end_point">
 <tt class="descname">end_point</tt><a class="headerlink" href="#potrace.BezierSegment.end_point" title="Permalink to this definition">¶</a></dt>
-<dd>Segment end point.</dd></dl>
+<dd>The segment&#8217;s end point.</dd></dl>
 
 <dl class="attribute">
 <dt id="potrace.BezierSegment.is_corner">
 <tt class="descname">is_corner</tt><a class="headerlink" href="#potrace.BezierSegment.is_corner" title="Permalink to this definition">¶</a></dt>
-<dd>Always False.</dd></dl>
+<dd>Always <tt class="xref xref docutils literal"><span class="pre">False</span></tt>.</dd></dl>
 
 </dd></dl>
 
@@ -223,17 +230,17 @@ easily.</p>
 <dl class="attribute">
 <dt id="potrace.CornerSegment.c">
 <tt class="descname">c</tt><a class="headerlink" href="#potrace.CornerSegment.c" title="Permalink to this definition">¶</a></dt>
-<dd>Segment corner point.</dd></dl>
+<dd>The segment&#8217;s corner point.</dd></dl>
 
 <dl class="attribute">
 <dt id="potrace.CornerSegment.end_point">
 <tt class="descname">end_point</tt><a class="headerlink" href="#potrace.CornerSegment.end_point" title="Permalink to this definition">¶</a></dt>
-<dd>Segment end point.</dd></dl>
+<dd>The segment&#8217;s end point.</dd></dl>
 
 <dl class="attribute">
 <dt id="potrace.CornerSegment.is_corner">
 <tt class="descname">is_corner</tt><a class="headerlink" href="#potrace.CornerSegment.is_corner" title="Permalink to this definition">¶</a></dt>
-<dd>Always True.</dd></dl>
+<dd>Always <tt class="xref xref docutils literal"><span class="pre">True</span></tt>.</dd></dl>
 
 </dd></dl>
 

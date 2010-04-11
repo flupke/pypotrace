@@ -195,48 +195,18 @@ cdef class BezierSegment:
     Represents a Bezier segment in a :class:`Curve` object.
     """
 
-    cdef potrace_dpoint_s _c1, _c2, _end_point
+    cdef public tuple c1, c2, end_point
+    cdef public bool is_corner
 
-    property c1:
-        """
-        Starting point Bezier control point.
-        """
-        def __get__(self):
-            return (self._c1.x, self._c1.y)
-
-    property c2:
-        """
-        End point Bezier control point.
-        """
-        def __get__(self):
-            return (self._c2.x, self._c2.y)
-
-    property end_point:
-        """
-        Segment end point.
-        """
-        def __get__(self):
-            return (self._end_point.x, self._end_point.y)
-
-    property is_corner:
-        """
-        Always False.
-        """
-        def __get__(self):
-            return False
+    def __init__(self, c1, c2, end_point):
+        self.c1 = c1
+        self.c2 = c2
+        self.end_point = end_point
+        self.is_corner = False
 
     def __repr__(self):
         return "BezierSegment(c1=%s, c2=%s, end_point=%s)" % (self.c1,
                 self.c2, self.end_point)
-
-    cdef load(self, potrace_dpoint_s *c1, potrace_dpoint_s *c2, 
-            potrace_dpoint_s *end_point):
-        """
-        Load the segment from C structure pointers.
-        """
-        self._c1 = c1[0]
-        self._c2 = c2[0]
-        self._end_point = end_point[0]        
 
 
 cdef class CornerSegment:
@@ -244,38 +214,16 @@ cdef class CornerSegment:
     Represents a corner segment in a :class:`Curve` object.
     """
 
-    cdef potrace_dpoint_s _c, _end_point
+    cdef public tuple c, end_point
+    cdef public bool is_corner
 
-    property c:
-        """
-        Segment corner point.
-        """
-        def __get__(self):
-            return (self._c.x, self._c.y)
-
-    property end_point:
-        """
-        Segment end point.
-        """
-        def __get__(self):
-            return (self._end_point.x, self._end_point.y)
-
-    property is_corner:
-        """
-        Always True.
-        """
-        def __get__(self):
-            return True
+    def __init__(self, c, end_point):
+        self.c = c
+        self.end_point = end_point
+        self.is_corner = True
 
     def __repr__(self):
         return "CornerSegment(c=%s, end_point=%s)" % (self.c, self.end_point)
-
-    cdef load(self, potrace_dpoint_s *c, potrace_dpoint_s *end_point):
-        """
-        Load the segment from C structure pointers.
-        """        
-        self._c = c[0]
-        self._end_point = end_point[0]
 
 
 cdef class Curve:
@@ -286,7 +234,7 @@ cdef class Curve:
     :class:`CornerSegment` objects connected to each other.
     """
 
-    cdef public object segments
+    cdef public list segments
 
     def __init__(self):
         self.segments = []
@@ -303,14 +251,12 @@ cdef class Curve:
 
     cdef append_bezier(self, potrace_dpoint_s *c1, potrace_dpoint_s *c2,
             potrace_dpoint_s *end_point):
-        cdef BezierSegment seg = BezierSegment()
-        seg.load(c1, c2, end_point)
-        self.segments.append(seg)
+        self.segments.append(BezierSegment((c1.x, c1.y), (c2.x, c2.y),
+            (end_point.x, end_point.y)))
 
     cdef append_corner(self, potrace_dpoint_s *c, potrace_dpoint_s *end_point):
-        cdef CornerSegment seg = CornerSegment()
-        seg.load(c, end_point)
-        self.segments.append(seg)
+        self.segments.append(CornerSegment((c.x, c.y), (end_point.x,
+            end_point.y)))
 
 
 cdef class Path:
@@ -318,7 +264,7 @@ cdef class Path:
     Path objects store a list of :class:`Curve` objects.
     """
 
-    cdef object curves
+    cdef public list curves
 
     def __init__(self):
         self.curves = []

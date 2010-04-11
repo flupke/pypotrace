@@ -7,6 +7,7 @@ potrace.CornerSegment class classes.html
 potrace.TURNPOLICY_BLACK data classes.html
 potrace.BezierSegment.c1 attribute classes.html
 potrace.Curve.segments attribute classes.html
+potrace.potracelib_version function classes.html
 potrace.BezierSegment.end_point attribute classes.html
 potrace.CornerSegment.end_point attribute classes.html
 potrace.CornerSegment.is_corner attribute classes.html

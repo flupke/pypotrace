@@ -3,8 +3,7 @@
 
 .. module:: potrace
 
-All objects properties are read only, unless otherwise noted. Points are
-returned as tuples of *(x, y)* values.
+.. autofunction:: potracelib_version
 
 Constants for :meth:`Bitmap.trace` *turnpolicy* parameter:
 
@@ -15,7 +14,6 @@ Constants for :meth:`Bitmap.trace` *turnpolicy* parameter:
 .. data:: TURNPOLICY_MINORITY
 .. data:: TURNPOLICY_MAJORITY
 .. data:: TURNPOLICY_RANDOM
-
 
 Bitmap
 ------
@@ -38,7 +36,7 @@ You start a trace by creating a :class:`Bitmap` instance, e.g.::
 Path
 ----
 
-:class:`Path` instances are returned by :meth:`Bitmap.trace`:
+:meth:`Bitmap.trace` returns :class:`Path` instances, containing 
 
 .. autoclass:: Path
 
@@ -59,13 +57,48 @@ Curve
 
       The list of segment objects that compose the curve.
 
-Segments can be either :class:`BezierSegment` or :class:`CornerSegment`
-objects. Both have a :attr:`is_corner` attribute to determine their type
-easily.
+There are two types of segments, :class:`BezierSegment`:
+
+.. image:: _static/bezier.png
+
+and :class:`CornerSegment`:
+
+.. image:: _static/corner.png
+
+Since curves are always closed, segments only store their control points and
+end point; their starting point is always the previous segment's end point. You
+can check the :attr:`is_corner` attribute to determine their type easily.
+
 
 .. autoclass:: BezierSegment
-   :members: c1, c2, end_point, is_corner
+    
+   .. attribute:: c1
+
+      The segment's starting point control point.
+
+   .. attribute:: c2
+    
+      The segment's end point control point.
+
+   .. attribute:: end_point
+      
+      The segment's end point.
+
+   .. attribute:: is_corner
+
+      Always :const:`False`.
 
 
 .. autoclass:: CornerSegment
-   :members: c, end_point, is_corner
+
+   .. attribute:: c
+
+      The segment's corner point.
+
+   .. attribute:: end_point
+      
+      The segment's end point.
+
+   .. attribute:: is_corner
+
+      Always :const:`True`.

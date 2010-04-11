@@ -31,5 +31,5 @@ Here is a simple example using potrace::
 
 
 The main class is :class:`Bitmap`. You pass its constructor a 2D numpy array,
-and you call its :meth:`trace <Bitmap.trace>` method to convert it to a
+and you call its :meth:`trace() <Bitmap.trace>` method to convert it to a
 :class:`Path` object.
