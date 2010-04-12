@@ -90,6 +90,3 @@ def test_tesselate():
     assert (points - adaptive).sum() < 1e-6
     points = curve.tesselate(curve.regular, res=10)
     assert (points - regular).sum() < 1e-6
-
-
-import matplotlib.path
