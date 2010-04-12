@@ -43,7 +43,7 @@ cdef class Bitmap:
         self.free_bitmap()
 
     def trace(self, turdsize=2, turnpolicy=POTRACE_TURNPOLICY_MINORITY,
-            alphamax=1.0, opticurve=1, opttolerance=0.2, progress_func=None):
+            alphamax=1.0, opticurve=1, opttolerance=0.2):
         """
         Trace the bitmap and wrap the result in a :class:`Path` instance.
 

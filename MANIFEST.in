@@ -3,6 +3,6 @@ include LICENSE
 include GPL
 include MANIFEST.in
 recursive-include tests *.py
-recursive-include potrace *.py *.pyx *.c *.pxd
+recursive-include potrace *.py *.pyx *.pxd *.c *.cpp
 recursive-include doc *
 global-exclude *.swp
