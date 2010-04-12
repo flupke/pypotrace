@@ -22,7 +22,7 @@ setup(
     url = "http://github.com/flupke/pypotrace",
     description = "potrace Python bindings",
     long_description = open("README.rst").read(),
-    version = "0.1_pre",
+    version = "0.1",
     classifiers = [
         "Development Status :: 4 - Beta",
         "Environment :: Console",

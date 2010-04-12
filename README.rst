@@ -33,6 +33,22 @@ The bindings work with input images represented as numpy arrays::
                 c1_x, c1_y = segment.c1
                 c2_x, c2_y = segment.c2
    
+Installation
+------------
+
+Make sure you have the agg and potrace development packages installed
+(libagg-dev and libpotrace-dev on ubuntu) and run::
+
+    python setup.py install
+
+Documentation
+-------------
+
+The documentation is hosted here: http://packages.python.org/pypotrace
+
+A copy is also included in the ``doc/_build/html`` directory of the source
+distribution.
+
 Homepage
 --------
 
