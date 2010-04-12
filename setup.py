@@ -3,12 +3,15 @@
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
-import potrace
 
 
 ext_modules = [
         Extension("potrace._potrace", ["potrace/_potrace.pyx"], 
-            libraries=["potrace"])
+            libraries=["potrace"]),
+        Extension("potrace.bezier", ["potrace/bezier.pyx"],
+            libraries=["agg"], language="c++"),
+        Extension("potrace.agg.curves", ["potrace/agg/curves.pyx"],
+            libraries=["agg"], language="c++"),
     ]
 
 
@@ -19,7 +22,7 @@ setup(
     url = "http://github.com/flupke/pypotrace",
     description = "potrace Python bindings",
     long_description = open("README.rst").read(),
-    version = potrace.__version__,
+    version = "0.1_pre",
     classifiers = [
         "Development Status :: 4 - Beta",
         "Environment :: Console",
@@ -33,7 +36,7 @@ setup(
         "Topic :: Multimedia :: Graphics :: Graphics Conversion",
     ],    
 
-    packages = ["potrace"],
+    packages = ["potrace", "potrace.agg"],
     ext_modules = ext_modules,
     
     cmdclass = {"build_ext": build_ext},

@@ -1,6 +1,7 @@
 cimport numpy as np
 cimport stdlib
 from python_string cimport PyString_FromString
+from potrace.bezier cimport adaptive_bezier, bezier
 
 import numpy as np
 
@@ -235,9 +236,15 @@ cdef class Curve:
     """
 
     cdef public list segments
+    cdef public list children
+
+    # Bezier tesselation methods constants
+    regular = 0
+    adaptive = 1
 
     def __init__(self):
         self.segments = []
+        self.children = []
 
     property start_point:
         """
@@ -245,6 +252,49 @@ cdef class Curve:
         """
         def __get__(self):
             return self.segments[-1].end_point
+
+    def tesselate(self, method=adaptive, res=30):
+        """
+        Tesselate the curve.
+
+        Returns a numpy array containing the curve vertices. The *method*
+        argument is for selecting the bezier segments tesselation method:
+        :attr:`adaptive` (the default) uses an adaptive tesselation algorithm
+        and :attr:`regular` divides the segments with a fixed number of steps
+        (controled by the *res* argument).
+        """
+        # Tesselate segments
+        num_verts = 0
+        tess_segs = []
+        start_point = self.start_point
+        bezier_cp = np.empty((4, 2))
+        for seg in self.segments:
+            if seg.is_corner:
+                tseg = np.zeros((2, 2))
+                tseg[0,:] = seg.c
+                tseg[1,:] = seg.end_point
+                tess_segs.append(tseg)
+                num_verts += 2
+            else:
+                bezier_cp[0,:] = start_point
+                bezier_cp[1,:] = seg.c1
+                bezier_cp[2,:] = seg.c2
+                bezier_cp[3,:] = seg.end_point
+                if method == self.adaptive:
+                    tseg = adaptive_bezier(bezier_cp)
+                elif method == self.regular:
+                    tseg = bezier(bezier_cp, res)
+                tess_segs.append(tseg)
+                num_verts += len(tseg)
+            start_point = seg.end_point
+        # Create result buffer
+        ret = np.empty((num_verts, 2))
+        cur_index = 0
+        for seg in tess_segs:
+            num_verts = len(seg)
+            ret[cur_index:cur_index + num_verts] = seg
+            cur_index += num_verts        
+        return ret
 
     def __iter__(self):
         return iter(self.segments)
@@ -265,9 +315,11 @@ cdef class Path:
     """
 
     cdef public list curves
+    cdef public list curves_tree
 
     def __init__(self):
         self.curves = []
+        self.curves_tree = []
 
     cdef append_curve(self, potrace_curve_s *curve):
         cdef potrace_dpoint_s *c1, *c2, *end_point
@@ -281,6 +333,7 @@ cdef class Path:
             elif curve.tag[i] == POTRACE_CORNER:
                 new_curve.append_corner(c2, end_point)
         self.curves.append(new_curve)
+        return new_curve
 
     def __iter__(self):
         return iter(self.curves)
@@ -320,10 +373,28 @@ cdef Path path_from_ptr(potrace_path_s *plist):
     """
     cdef potrace_path_s *cur_path = plist
     cdef Path path = Path()    
-    while cur_path != NULL:
-        path.append_curve(&cur_path.curve)
+    # Store linear structure
+    curves_map = {}
+    while cur_path != NULL:        
+        curves_map[<int>cur_path] = path.append_curve(&cur_path.curve)
         cur_path = cur_path.next
+    # Store tree structure
+    init_curves_tree(path.curves_tree, curves_map, plist)
     return path
+
+
+cdef init_curves_tree(list child_list, dict curves_map, potrace_path_s *plist):
+    """
+    Init a curves tree structure.
+    """
+    cdef potrace_path_s *cur_path = plist
+    if plist == NULL:
+        return
+    while cur_path != NULL:
+        cur_curve = curves_map[<int>cur_path]
+        child_list.append(cur_curve)
+        init_curves_tree(cur_curve.children, curves_map, cur_path.childlist)
+        cur_path = cur_path.sibling
 
 
 __all__ = ["TURNPOLICY_BLACK", "TURNPOLICY_WHITE", "TURNPOLICY_LEFT",

@@ -3,7 +3,7 @@ Tutorial
 
 .. currentmodule:: potrace
 
-Here is a simple example using potrace::
+Here is a simple example using pypotrace::
 
     import potrace
 

@@ -11,7 +11,7 @@ def test_errors():
 
 def test_trace():
     data = np.zeros((32, 32), np.uint32)
-    data[8:32-8, 8:32-8] = 0xffffffff
+    data[8:32-8, 8:32-8] = 1
     bmp = potrace.Bitmap(data)
     path = bmp.trace()
     ref_points = [(8.0, 8.0),
@@ -26,9 +26,21 @@ def test_trace():
     points = []
     for curve in path:
         for segment in curve:
+            assert segment.is_corner
             points.append(segment.c)
             points.append(segment.end_point)
     assert_equal(points, ref_points)
+
+
+def test_tree():
+    data = np.zeros((32, 32), np.uint32)
+    data[8:32-8, 8:32-8] = 1
+    data[10:32-10, 10:32-10] = 0
+    bmp = potrace.Bitmap(data)
+    path = bmp.trace()
+    assert_equal(len(path.curves_tree), 1)
+    assert_equal(len(path.curves_tree[0].children), 1)
+    assert_equal(len(path.curves_tree[0].children[0].children), 0)
 
 
 if __name__ == "__main__":

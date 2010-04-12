@@ -15,8 +15,9 @@ Constants for :meth:`Bitmap.trace` *turnpolicy* parameter:
 .. data:: TURNPOLICY_MAJORITY
 .. data:: TURNPOLICY_RANDOM
 
-Bitmap
-------
+
+Bitmap objects
+--------------
 
 You start a trace by creating a :class:`Bitmap` instance, e.g.::
 
@@ -33,10 +34,11 @@ You start a trace by creating a :class:`Bitmap` instance, e.g.::
    .. automethod:: trace([turdsize, turnpolicy, alphamax, opticurve, opttolerance, progress_func])
 
 
-Path
-----
+Path objects
+------------
 
-:meth:`Bitmap.trace` returns :class:`Path` instances, containing 
+:meth:`Bitmap.trace` returns a :class:`Path` instance, containing the whole
+vectorized image.
 
 .. autoclass:: Path
 
@@ -44,18 +46,39 @@ Path
       
       The list of :class:`Curve` objects composing the path.
 
+   .. attribute:: curves_tree
 
-Curve
------
+      The top level :class:`Curve` objects in the tree representation of the
+      path.
 
-:class:`Curve` objects are the basic components of :class:`Path` objects.
+
+Curve objects
+-------------
+
+:class:`Path` objects are made of one or more of :class:`Curve` objects,
+which are themselves composed of a list of segments.
+
+Curves can have children curves. Children curves are guaranteed to be enclosed
+by their parent.
 
 .. autoclass:: Curve
-   :members: start_point
+
+   .. attribute:: regular
+   .. attribute:: adaptive
+
+      Constants for the :meth:`tesselate` method.
+
+   .. autoattribute:: start_point
 
    .. attribute:: segments
 
       The list of segment objects that compose the curve.
+
+   .. attribute:: children
+
+      The list of children curves.
+
+   .. automethod:: tesselate([method, res])
 
 There are two types of segments, :class:`BezierSegment`:
 
@@ -67,7 +90,7 @@ and :class:`CornerSegment`:
 
 Since curves are always closed, segments only store their control points and
 end point; their starting point is always the previous segment's end point. You
-can check the :attr:`is_corner` attribute to determine their type easily.
+can check the :attr:`is_corner` attribute to determine the segments type easily.
 
 
 .. autoclass:: BezierSegment

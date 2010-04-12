@@ -89,8 +89,8 @@
 <tt class="descclassname">potrace.</tt><tt class="descname">TURNPOLICY_RANDOM</tt><a class="headerlink" href="#potrace.TURNPOLICY_RANDOM" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<div class="section" id="bitmap">
-<h2>Bitmap<a class="headerlink" href="#bitmap" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bitmap-objects">
+<h2>Bitmap objects<a class="headerlink" href="#bitmap-objects" title="Permalink to this headline">¶</a></h2>
 <p>You start a trace by creating a <a title="potrace.Bitmap" class="reference internal" href="#potrace.Bitmap"><tt class="xref docutils literal"><span class="pre">Bitmap</span></tt></a> instance, e.g.:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">potrace</span> <span class="kn">import</span> <span class="n">Bitmap</span>
 
@@ -154,9 +154,10 @@ default value is a good tradeoff between space and accuracy.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="path">
-<h2>Path<a class="headerlink" href="#path" title="Permalink to this headline">¶</a></h2>
-<p><a title="potrace.Bitmap.trace" class="reference internal" href="#potrace.Bitmap.trace"><tt class="xref docutils literal"><span class="pre">Bitmap.trace()</span></tt></a> returns <a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> instances, containing</p>
+<div class="section" id="path-objects">
+<h2>Path objects<a class="headerlink" href="#path-objects" title="Permalink to this headline">¶</a></h2>
+<p><a title="potrace.Bitmap.trace" class="reference internal" href="#potrace.Bitmap.trace"><tt class="xref docutils literal"><span class="pre">Bitmap.trace()</span></tt></a> returns a <a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> instance, containing the whole
+vectorized image.</p>
 <dl class="class">
 <dt id="potrace.Path">
 <em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">Path</tt><a class="headerlink" href="#potrace.Path" title="Permalink to this definition">¶</a></dt>
@@ -166,12 +167,21 @@ default value is a good tradeoff between space and accuracy.</p>
 <tt class="descname">curves</tt><a class="headerlink" href="#potrace.Path.curves" title="Permalink to this definition">¶</a></dt>
 <dd>The list of <a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> objects composing the path.</dd></dl>
 
+<dl class="attribute">
+<dt id="potrace.Path.curves_tree">
+<tt class="descname">curves_tree</tt><a class="headerlink" href="#potrace.Path.curves_tree" title="Permalink to this definition">¶</a></dt>
+<dd>The top level <a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> objects in the tree representation of the
+path.</dd></dl>
+
 </dd></dl>
 
 </div>
-<div class="section" id="curve">
-<h2>Curve<a class="headerlink" href="#curve" title="Permalink to this headline">¶</a></h2>
-<p><a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> objects are the basic components of <a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> objects.</p>
+<div class="section" id="curve-objects">
+<h2>Curve objects<a class="headerlink" href="#curve-objects" title="Permalink to this headline">¶</a></h2>
+<p><a title="potrace.Path" class="reference internal" href="#potrace.Path"><tt class="xref docutils literal"><span class="pre">Path</span></tt></a> objects are made of one or more of <a title="potrace.Curve" class="reference internal" href="#potrace.Curve"><tt class="xref docutils literal"><span class="pre">Curve</span></tt></a> objects,
+which are themselves composed of a list of segments.</p>
+<p>Curves can have children curves. Children curves are guaranteed to be enclosed
+by their parent.</p>
 <dl class="class">
 <dt id="potrace.Curve">
 <em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">Curve</tt><a class="headerlink" href="#potrace.Curve" title="Permalink to this definition">¶</a></dt>
@@ -179,14 +189,40 @@ default value is a good tradeoff between space and accuracy.</p>
 <p>Curves are made of a list of <a title="potrace.BezierSegment" class="reference internal" href="#potrace.BezierSegment"><tt class="xref docutils literal"><span class="pre">BezierSegment</span></tt></a> and
 <a title="potrace.CornerSegment" class="reference internal" href="#potrace.CornerSegment"><tt class="xref docutils literal"><span class="pre">CornerSegment</span></tt></a> objects connected to each other.</p>
 <dl class="attribute">
-<dt id="potrace.Curve.segments">
-<tt class="descname">segments</tt><a class="headerlink" href="#potrace.Curve.segments" title="Permalink to this definition">¶</a></dt>
-<dd>The list of segment objects that compose the curve.</dd></dl>
+<dt id="potrace.Curve.regular">
+<tt class="descname">regular</tt><a class="headerlink" href="#potrace.Curve.regular" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.Curve.adaptive">
+<tt class="descname">adaptive</tt><a class="headerlink" href="#potrace.Curve.adaptive" title="Permalink to this definition">¶</a></dt>
+<dd>Constants for the <a title="potrace.Curve.tesselate" class="reference internal" href="#potrace.Curve.tesselate"><tt class="xref docutils literal"><span class="pre">tesselate()</span></tt></a> method.</dd></dl>
 
 <dl class="attribute">
 <dt id="potrace.Curve.start_point">
 <tt class="descname">start_point</tt><a class="headerlink" href="#potrace.Curve.start_point" title="Permalink to this definition">¶</a></dt>
 <dd>The curve starting point.</dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.Curve.segments">
+<tt class="descname">segments</tt><a class="headerlink" href="#potrace.Curve.segments" title="Permalink to this definition">¶</a></dt>
+<dd>The list of segment objects that compose the curve.</dd></dl>
+
+<dl class="attribute">
+<dt id="potrace.Curve.children">
+<tt class="descname">children</tt><a class="headerlink" href="#potrace.Curve.children" title="Permalink to this definition">¶</a></dt>
+<dd>The list of children curves.</dd></dl>
+
+<dl class="method">
+<dt id="potrace.Curve.tesselate">
+<tt class="descname">tesselate</tt><big>(</big><span class="optional">[</span><em>method</em>, <em>res</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#potrace.Curve.tesselate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tesselate the curve.</p>
+<p>Returns a numpy array containing the curve vertices. The <em>method</em>
+argument is for selecting the bezier segments tesselation method:
+<a title="potrace.Curve.adaptive" class="reference internal" href="#potrace.Curve.adaptive"><tt class="xref docutils literal"><span class="pre">adaptive</span></tt></a> (the default) uses an adaptive tesselation algorithm
+and <a title="potrace.Curve.regular" class="reference internal" href="#potrace.Curve.regular"><tt class="xref docutils literal"><span class="pre">regular</span></tt></a> divides the segments with a fixed number of steps
+(controled by the <em>res</em> argument).</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -196,7 +232,7 @@ default value is a good tradeoff between space and accuracy.</p>
 <img alt="_images/corner.png" src="_images/corner.png" />
 <p>Since curves are always closed, segments only store their control points and
 end point; their starting point is always the previous segment&#8217;s end point. You
-can check the <tt class="xref docutils literal"><span class="pre">is_corner</span></tt> attribute to determine their type easily.</p>
+can check the <tt class="xref docutils literal"><span class="pre">is_corner</span></tt> attribute to determine the segments type easily.</p>
 <dl class="class">
 <dt id="potrace.BezierSegment">
 <em class="property">class </em><tt class="descclassname">potrace.</tt><tt class="descname">BezierSegment</tt><a class="headerlink" href="#potrace.BezierSegment" title="Permalink to this definition">¶</a></dt>
@@ -256,9 +292,9 @@ can check the <tt class="xref docutils literal"><span class="pre">is_corner</spa
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">potrace</span></tt> &#8211; API reference</a><ul>
-<li><a class="reference external" href="#bitmap">Bitmap</a></li>
-<li><a class="reference external" href="#path">Path</a></li>
-<li><a class="reference external" href="#curve">Curve</a></li>
+<li><a class="reference external" href="#bitmap-objects">Bitmap objects</a></li>
+<li><a class="reference external" href="#path-objects">Path objects</a></li>
+<li><a class="reference external" href="#curve-objects">Curve objects</a></li>
 </ul>
 </li>
 </ul>
@@ -268,7 +304,7 @@ can check the <tt class="xref docutils literal"><span class="pre">is_corner</spa
                         title="previous chapter">Tutorial</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/classes.txt"
+    <li><a href="_sources/ref.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">

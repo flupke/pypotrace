@@ -1,10 +1,10 @@
-.. potrace documentation master file, created by
-   sphinx-quickstart on Sat Apr 10 10:46:52 2010.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+pypotrace documentation
+=======================
 
-Welcome to potrace's documentation!
-===================================
+pypotrace are Python bindings for `potrace`_, an utility to transform bitmap
+images into vector images.
+
+.. _potrace: http://potrace.sourceforge.net/
 
 Contents:
 
@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
 
    tutorial
-   classes
+   ref
 
 
 Indices and tables
