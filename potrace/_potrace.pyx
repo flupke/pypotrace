@@ -5,6 +5,8 @@ from potrace.bezier cimport adaptive_bezier, bezier
 
 import numpy as np
 
+cdef extern from "stdbool.h":
+    ctypedef unsigned short bool
 
 # Number of pixels in a word
 cdef int N = sizeof(potrace_word) * 8
@@ -124,7 +126,7 @@ cdef class Bitmap:
             # Initialize bitmap buffer from numpy array
             for y in range(self.po_bitmap.h):
                 for x in range(self.po_bitmap.w):
-                    setpixel(&self.po_bitmap, x, y, bool(self._data[y, x]))
+                    setpixel(&self.po_bitmap, x, y, <bool>self._data[y, x])
 
     cdef free_bitmap(self):
         if self.po_bitmap.map != NULL:

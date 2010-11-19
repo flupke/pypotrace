@@ -31,7 +31,7 @@ You start a trace by creating a :class:`Bitmap` instance, e.g.::
 
 .. autoclass:: Bitmap(data)
    
-   .. automethod:: trace([turdsize, turnpolicy, alphamax, opticurve, opttolerance, progress_func])
+   .. automethod:: trace([turdsize, turnpolicy, alphamax, opticurve, opttolerance])
 
 
 Path objects
