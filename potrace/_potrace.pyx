@@ -355,9 +355,9 @@ cdef void setpixel(potrace_bitmap_s *bmp, int x, int y, int on):
     Set a pixel on or off in a potrace_bitmap_s.
     """
     if on:
-        bmp.map[y*bmp.dy + x/N] |= 1 << (N - 1 - x % N)
+        bmp.map[y*bmp.dy + x/N] |=  (1uL << (N - 1 - x % N))
     else:
-        bmp.map[y*bmp.dy + x/N] &= ~(1 << (N - 1 - x % N))
+        bmp.map[y*bmp.dy + x/N] &= ~(1uL << (N - 1 - x % N))
 
 
 cdef State state_from_ptr(potrace_state_s *state):
