@@ -61,7 +61,7 @@ MSYS prompt.
 
 After that, we need some variables to build pypotrace successfully:
 
-First, includes paths:j
+First, includes paths:
 
 * "numpy/arrayobject.h": ``C:/Python27/Lib/site-packages/numpy/core/include``
 * potrace headers: ``C:/src/potrace-1.11/src``

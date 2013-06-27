@@ -9,9 +9,9 @@ ext_modules = [
         Extension("potrace._potrace", ["potrace/_potrace.pyx"], 
             libraries=["potrace"]),
         Extension("potrace.bezier", ["potrace/bezier.pyx"],
-            libraries=["agg"], language="c++"),
+            libraries=["agg_pic"], language="c++"),
         Extension("potrace.agg.curves", ["potrace/agg/curves.pyx"],
-            libraries=["agg"], language="c++"),
+            libraries=["agg_pic"], language="c++"),
     ]
 
 
@@ -22,7 +22,7 @@ setup(
     url = "http://github.com/flupke/pypotrace",
     description = "potrace Python bindings",
     long_description = open("README.rst").read(),
-    version = "0.1",
+    version = "0.1.1",
     classifiers = [
         "Development Status :: 4 - Beta",
         "Environment :: Console",
