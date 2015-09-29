@@ -1,18 +1,52 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+import os
+from setuptools import setup
 from distutils.extension import Extension
+
 from Cython.Distutils import build_ext
 
 
+CYTHONIZE = os.environ.get("CYTHONIZE", "0") == "1"
+if CYTHONIZE:
+    from Cython.Distutils import build_ext
+else:
+    from setuptools.command.build_ext import build_ext
+
+
+def create_ext_obj(name, sources, cython=False, **kwargs):
+    '''
+    Create an :class:`~distutils.extension.Extension` object for module *name*,
+    built from *sources*.
+
+    *sources* strings are interpolated with the ``{ext}`` named variable.
+    ``ext`` is determined automatically depending on the *cython* argument and
+    the value of the *language* keyword argument. This way if Cython is
+    present, Cython source files are compiled to C (typically on a developer
+    machine), and if it's absent (e.g. on a deployment machine) the existing C
+    files are compiled.
+
+    Any other extra keyword arguments are passed as-is to
+    :class:`~distutils.extension.Extension` constructor.
+    '''
+    if cython:
+        ext = 'pyx'
+    elif kwargs.get('language') == 'c++':
+        ext = 'cpp'
+    else:
+        ext = 'c'
+    sources = [s.format(ext=ext) for s in sources]
+    return Extension(name=name, sources=sources, **kwargs)
+
+
 ext_modules = [
-        Extension("potrace._potrace", ["potrace/_potrace.pyx"], 
-            libraries=["potrace"]),
-        Extension("potrace.bezier", ["potrace/bezier.pyx"],
-            libraries=["agg_pic"], language="c++"),
-        Extension("potrace.agg.curves", ["potrace/agg/curves.pyx"],
-            libraries=["agg_pic"], language="c++"),
-    ]
+    create_ext_obj("potrace._potrace", ["potrace/_potrace.pyx"],
+        libraries=["potrace"]),
+    create_ext_obj("potrace.bezier", ["potrace/bezier.pyx"],
+        libraries=["agg_pic"], language="c++"),
+    create_ext_obj("potrace.agg.curves", ["potrace/agg/curves.pyx"],
+        libraries=["agg_pic"], language="c++"),
+]
 
 
 setup(
@@ -34,10 +68,10 @@ setup(
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Multimedia :: Graphics :: Graphics Conversion",
-    ],    
+    ],
 
     packages = ["potrace", "potrace.agg"],
     ext_modules = ext_modules,
-    
+
     cmdclass = {"build_ext": build_ext},
 )
