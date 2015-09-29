@@ -5,8 +5,6 @@ import subprocess
 from setuptools import setup
 from distutils.extension import Extension
 
-from Cython.Distutils import build_ext
-
 # Use Cython version of build_ext if the CYTHONIZE environment variable is set
 CYTHONIZE = 'CYTHONIZE' in os.environ
 if CYTHONIZE:
@@ -66,12 +64,14 @@ def create_ext_obj(name, sources, cython=False, pkg_config_libs=None, **kwargs):
 
 
 ext_modules = [
-    create_ext_obj("potrace._potrace", ["potrace/_potrace.pyx"],
-        libraries=["potrace"], include_dirs=include_dirs),
-    create_ext_obj("potrace.bezier", ["potrace/bezier.pyx"],
-        pkg_config_libs=['libagg'], language="c++", include_dirs=include_dirs),
-    create_ext_obj("potrace.agg.curves", ["potrace/agg/curves.pyx"],
-        pkg_config_libs=['libagg'], language="c++", include_dirs=include_dirs),
+    create_ext_obj("potrace._potrace", ["potrace/_potrace.{ext}"],
+        libraries=["potrace"], include_dirs=include_dirs, cython=CYTHONIZE),
+    create_ext_obj("potrace.bezier", ["potrace/bezier.{ext}"],
+        pkg_config_libs=['libagg'], language="c++", include_dirs=include_dirs,
+        cython=CYTHONIZE),
+    create_ext_obj("potrace.agg.curves", ["potrace/agg/curves.{ext}"],
+        pkg_config_libs=['libagg'], language="c++", include_dirs=include_dirs,
+        cython=CYTHONIZE),
 ]
 
 
