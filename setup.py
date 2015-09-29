@@ -6,13 +6,20 @@ from distutils.extension import Extension
 
 from Cython.Distutils import build_ext
 
-
-CYTHONIZE = os.environ.get("CYTHONIZE", "0") == "1"
+# Use Cython version of build_ext if the CYTHONIZE environment variable is set
+CYTHONIZE = 'CYTHONIZE' in os.environ
 if CYTHONIZE:
     from Cython.Distutils import build_ext
 else:
     from setuptools.command.build_ext import build_ext
 
+# Get numpy include dirs
+try:
+    import numpy
+    include_dirs = [numpy.get_include()]
+except ImportError:
+    include_dirs = None
+print include_dirs
 
 def create_ext_obj(name, sources, cython=False, **kwargs):
     '''
@@ -41,11 +48,11 @@ def create_ext_obj(name, sources, cython=False, **kwargs):
 
 ext_modules = [
     create_ext_obj("potrace._potrace", ["potrace/_potrace.pyx"],
-        libraries=["potrace"]),
+        libraries=["potrace"], include_dirs=include_dirs),
     create_ext_obj("potrace.bezier", ["potrace/bezier.pyx"],
-        libraries=["agg_pic"], language="c++"),
+        libraries=["agg_pic"], language="c++", include_dirs=include_dirs),
     create_ext_obj("potrace.agg.curves", ["potrace/agg/curves.pyx"],
-        libraries=["agg_pic"], language="c++"),
+        libraries=["agg_pic"], language="c++", include_dirs=include_dirs),
 ]
 
 
