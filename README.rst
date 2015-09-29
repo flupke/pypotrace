@@ -20,7 +20,7 @@ The bindings work with input images represented as numpy arrays::
 
     # Trace the bitmap to a path
     path = bmp.trace()
-    
+
     # Iterate over path curves
     for curve in path:
         print "start_point =", curve.start_point
@@ -32,17 +32,40 @@ The bindings work with input images represented as numpy arrays::
             else:
                 c1_x, c1_y = segment.c1
                 c2_x, c2_y = segment.c2
-   
+
 Installation
 ------------
 
-Make sure you have the agg and potrace development packages installed
-(libagg-dev and libpotrace-dev on ubuntu) and run::
+Ubuntu
+~~~~~~
 
-    python setup.py install
+Install system dependencies::
 
-Building on Windows
-~~~~~~~~~~~~~~~~~~~
+    $ sudo apt-get install build-essential python-dev libagg-dev libpotrace-dev pkg-config
+
+Install pypotrace::
+
+    $ git clone https://github.com/flupke/pypotrace.git
+    $ cd pypotrace
+    $ pip install -r requirements.txt
+    $ pip install .
+
+OSX
+~~~
+
+Install system dependencies::
+
+    $ brew install libagg pkg-config potrace
+
+Install pypotrace::
+
+    $ git clone https://github.com/flupke/pypotrace.git
+    $ cd pypotrace
+    $ pip install -r requirements.txt
+    $ pip install .
+
+Windows
+~~~~~~~
 
 *Thanks to* `klonuo <https://github.com/klonuo>`_ *for the instructions*
 
@@ -105,6 +128,14 @@ Finally install the package::
     byte-compiling C:\Python27\Lib\site-packages\potrace\__init__.py to __init__.pyc
     running install_egg_info
     Writing C:\Python27\Lib\site-packages\pypotrace-0.1-py2.7.egg-info
+
+Running tests
+-------------
+
+You can check everything is working correctly by running the tests::
+
+    $ pip install -r requirements-tests.txt
+    $ nosetests -v
 
 Documentation
 -------------
