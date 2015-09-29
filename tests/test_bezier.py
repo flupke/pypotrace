@@ -1,8 +1,7 @@
-from nose.tools import assert_raises, assert_equal
 import numpy as np
 import potrace
-import Image
-import ImageDraw
+from PIL import Image
+from PIL import ImageDraw
 
 adaptive = [
         [ 13.31417446,  23.4900536 ],
@@ -84,7 +83,7 @@ def test_tesselate():
     bmp = potrace.Bitmap(data)
     path = bmp.trace()
     out = Image.new("RGB", (32, 32), (0, 0, 0))
-    draw = ImageDraw.Draw(out)
+    ImageDraw.Draw(out)
     curve = path.curves[0]
     points = curve.tesselate(curve.adaptive)
     assert (points - adaptive).sum() < 1e-6
