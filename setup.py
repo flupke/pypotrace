@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import subprocess
 from setuptools import setup
 from distutils.extension import Extension
 
@@ -21,7 +22,12 @@ except ImportError:
     include_dirs = None
 print include_dirs
 
-def create_ext_obj(name, sources, cython=False, **kwargs):
+
+def get_flags(flags, prefix):
+    return [flag[2:] for flag in flags if flag.startswith(prefix)]
+
+
+def create_ext_obj(name, sources, cython=False, pkg_config_libs=None, **kwargs):
     '''
     Create an :class:`~distutils.extension.Extension` object for module *name*,
     built from *sources*.
@@ -36,6 +42,19 @@ def create_ext_obj(name, sources, cython=False, **kwargs):
     Any other extra keyword arguments are passed as-is to
     :class:`~distutils.extension.Extension` constructor.
     '''
+    if pkg_config_libs is not None:
+        args = ['pkg-config', '--libs', '--cflags']
+        args.extend(pkg_config_libs)
+        pkg_config_output = subprocess.check_output(args)
+        flags = pkg_config_output.split()
+        for key, flag in (
+                ('include_dirs', '-I'),
+                ('library_dirs', '-L'),
+                ('libraries', '-l')):
+            pkg_config_flags = get_flags(flags, flag)
+            kwargs_value = kwargs.get(key, [])
+            kwargs_value += pkg_config_flags
+            kwargs[key] = kwargs_value
     if cython:
         ext = 'pyx'
     elif kwargs.get('language') == 'c++':
@@ -50,9 +69,9 @@ ext_modules = [
     create_ext_obj("potrace._potrace", ["potrace/_potrace.pyx"],
         libraries=["potrace"], include_dirs=include_dirs),
     create_ext_obj("potrace.bezier", ["potrace/bezier.pyx"],
-        libraries=["agg_pic"], language="c++", include_dirs=include_dirs),
+        pkg_config_libs=['libagg'], language="c++", include_dirs=include_dirs),
     create_ext_obj("potrace.agg.curves", ["potrace/agg/curves.pyx"],
-        libraries=["agg_pic"], language="c++", include_dirs=include_dirs),
+        pkg_config_libs=['libagg'], language="c++", include_dirs=include_dirs),
 ]
 
 
