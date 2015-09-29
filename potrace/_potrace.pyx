@@ -111,7 +111,7 @@ cdef class Bitmap:
         def __get__(self):
             return self._data
 
-        def __set__(self, value):
+        def __set__(self, np.ndarray value not None):
             cdef int x, y
             self._data = value
             # Init potrace bitmap struct
