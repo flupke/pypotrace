@@ -17,8 +17,7 @@ try:
     import numpy
     include_dirs = [numpy.get_include()]
 except ImportError:
-    include_dirs = None
-print include_dirs
+    include_dirs = []
 
 
 def get_flags(flags, prefix):
