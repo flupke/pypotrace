@@ -50,6 +50,20 @@ Install pypotrace::
     $ pip install -r requirements.txt
     $ pip install .
 
+CentOS/RedHat
+~~~~~~~~~~~~~
+
+Install system dependencies::
+    $ sudo yum -y groupinstall "Development Tools"
+    $ sudo yum -y install agg-devel potrace-devel python-devel
+
+Install pypotrace::
+
+    $ git clone https://github.com/flupke/pypotrace.git
+    $ cd pypotrace
+    $ pip install -r requirements.txt
+    $ pip install .
+
 OSX
 ~~~
 
