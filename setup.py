@@ -21,7 +21,7 @@ except ImportError:
 
 
 def get_flags(flags, prefix):
-    return [flag[2:] for flag in flags if flag.startswith(prefix)]
+    return [flag[2:] for flag in flags if str(flag).startswith(prefix)]
 
 
 def create_ext_obj(name, sources, cython=False, pkg_config_libs=None, **kwargs):
