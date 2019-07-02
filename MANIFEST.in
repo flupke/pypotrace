@@ -2,7 +2,7 @@ include README.rst
 include LICENSE
 include GPL
 include MANIFEST.in
+include cysetuptools.py
 recursive-include tests *.py
-recursive-include potrace *.py *.pyx *.pxd *.c *.cpp
+recursive-include potrace *.py *.pyx *.pxd
 recursive-include doc *
-global-exclude *.swp
