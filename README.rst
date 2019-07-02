@@ -47,13 +47,14 @@ Install pypotrace::
 
     $ git clone https://github.com/flupke/pypotrace.git
     $ cd pypotrace
-    $ pip install -r requirements.txt
+    $ pip install numpy
     $ pip install .
 
 CentOS/RedHat
 ~~~~~~~~~~~~~
 
 Install system dependencies::
+
     $ sudo yum -y groupinstall "Development Tools"
     $ sudo yum -y install agg-devel potrace-devel python-devel
 
@@ -61,7 +62,7 @@ Install pypotrace::
 
     $ git clone https://github.com/flupke/pypotrace.git
     $ cd pypotrace
-    $ pip install -r requirements.txt
+    $ pip install numpy
     $ pip install .
 
 OSX
@@ -75,7 +76,7 @@ Install pypotrace::
 
     $ git clone https://github.com/flupke/pypotrace.git
     $ cd pypotrace
-    $ pip install -r requirements.txt
+    $ pip install numpy
     $ pip install .
 
 Windows
@@ -148,7 +149,7 @@ Running tests
 
 You can check everything is working correctly by running the tests::
 
-    $ pip install -r requirements-tests.txt
+    $ pip install '.[dev]'
     $ nosetests -v
 
 Documentation
