@@ -1,7 +1,8 @@
+cimport libc.stdlib
+cimport cpython.bytes
 cimport numpy as np
-cimport stdlib
-from python_string cimport PyString_FromString
 from potrace.bezier cimport adaptive_bezier, bezier
+
 
 import numpy as np
 
@@ -122,7 +123,7 @@ cdef class Bitmap:
             # Allocate bitmap buffer
             size = self.po_bitmap.h * self.po_bitmap.dy * sizeof(potrace_word)
             self.free_bitmap()
-            self.po_bitmap.map = <potrace_word*>stdlib.malloc(size)
+            self.po_bitmap.map = <potrace_word*>libc.stdlib.malloc(size)
             # Initialize bitmap buffer from numpy array
             for y in range(self.po_bitmap.h):
                 for x in range(self.po_bitmap.w):
@@ -130,7 +131,7 @@ cdef class Bitmap:
 
     cdef free_bitmap(self):
         if self.po_bitmap.map != NULL:
-            stdlib.free(self.po_bitmap.map)
+            libc.stdlib.free(self.po_bitmap.map)
 
 
 cdef class Parameters:
@@ -345,7 +346,7 @@ def potracelib_version():
     """
     Return the potrace library version.
     """
-    return PyString_FromString(potrace_version())
+    return cpython.bytes.PyBytes_FromString(potrace_version()).decode()
 
 
 # Utility functions
