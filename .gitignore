@@ -5,3 +5,4 @@ MANIFEST
 *.cpp
 *.c
 *.pyc
+/.eggs
