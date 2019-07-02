@@ -58,13 +58,13 @@ cdef class Bitmap:
         The *turnpolicy* parameter determines how to resolve ambiguities during
         decomposition of bitmaps into paths. The possible choices for the
         *turnpolicy* parameter are:
-        
+
         * :const:`TURNPOLICY_BLACK`: prefers to connect black
           (foreground) components.
 
         * :const:`TURNPOLICY_WHITE`: prefers to connect white
           (background) components.
-        
+
         * :const:`TURNPOLICY_LEFT`: always take a left turn.
 
         * :const:`TURNPOLICY_RIGHT`: always take a right turn.
@@ -73,12 +73,12 @@ cdef class Bitmap:
           (black or white) that occurs least frequently in a local neighborhood
           of the current position.
 
-        * :const:`TURNPOLICY_MAJORITY`: prefers to connect the color 
+        * :const:`TURNPOLICY_MAJORITY`: prefers to connect the color
           (black or white) that occurs most frequently in a local neighborhood
           of the current position.
 
         * :const:`TURNPOLICY_RANDOM`: choose randomly.
-        
+
         The current default policy is :const:`TURNPOLICY_MINORITY`, which tends
         to keep visual lines connected.
 
@@ -138,11 +138,11 @@ cdef class Parameters:
     """
     Stores parameters for the potrace_trace function.
     """
-    
+
     cdef potrace_param_s *po_params
 
-    def __cinit__(self, int turdsize=2, 
-            int turnpolicy=POTRACE_TURNPOLICY_MINORITY, double alphamax=1.0, 
+    def __cinit__(self, int turdsize=2,
+            int turnpolicy=POTRACE_TURNPOLICY_MINORITY, double alphamax=1.0,
             int opticurve=1, double opttolerance=0.2, *args, **kwargs):
         self.po_params = potrace_param_default()
         self.po_params.turdsize = turdsize
@@ -191,7 +191,7 @@ cdef class State:
             if not self.ok:
                 raise ValueError("can't access the image property of "
                         "an incomplete trace state")
-            return path_from_ptr(self.po_state.plist);            
+            return path_from_ptr(self.po_state.plist);
 
 
 cdef class BezierSegment:
@@ -296,7 +296,7 @@ cdef class Curve:
         for seg in tess_segs:
             num_verts = len(seg)
             ret[cur_index:cur_index + num_verts] = seg
-            cur_index += num_verts        
+            cur_index += num_verts
         return ret
 
     def __iter__(self):
@@ -375,10 +375,10 @@ cdef Path path_from_ptr(potrace_path_s *plist):
     Create a Path instance containing a copy of the paths defined in *plist*.
     """
     cdef potrace_path_s *cur_path = plist
-    cdef Path path = Path()    
+    cdef Path path = Path()
     # Store linear structure
     curves_map = {}
-    while cur_path != NULL:        
+    while cur_path != NULL:
         curves_map[<int>cur_path] = path.append_curve(&cur_path.curve)
         cur_path = cur_path.next
     # Store tree structure

@@ -15,7 +15,7 @@ cdef extern from "potracelib.h":
     int POTRACE_STATUS_INCOMPLETE
 
     ctypedef unsigned long potrace_word
-    
+
     struct potrace_progress_s:
         void (*callback)(double progress, void *privdata)
         void *data
@@ -37,29 +37,29 @@ cdef extern from "potracelib.h":
 
     struct potrace_dpoint_s:
         double x, y
-    
+
     struct potrace_curve_s:
         int n
         int *tag
         potrace_dpoint_s *c[3]
-    
+
     struct potrace_path_s:
-        int area              
-        int sign                         
+        int area
+        int sign
         potrace_curve_s curve
         potrace_path_s *next
-        potrace_path_s *childlist 
-        potrace_path_s *sibling   
+        potrace_path_s *childlist
+        potrace_path_s *sibling
         void *priv
 
     struct potrace_state_s:
-        int status                       
+        int status
         potrace_path_s *plist
-        void *priv 
+        void *priv
 
     potrace_param_s *potrace_param_default()
     void potrace_param_free(potrace_param_s *p)
-    potrace_state_s *potrace_trace(potrace_param_s *param, 
+    potrace_state_s *potrace_trace(potrace_param_s *param,
             potrace_bitmap_s *bm)
     void potrace_state_free(potrace_state_s *st)
     char *potrace_version()

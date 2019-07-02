@@ -11,7 +11,7 @@ cdef np.ndarray bezier(np.ndarray p_, int steps=30):
 
     Returns a numpy array containing *steps + 1* vertices equally spaced along
     the curve.
-    
+
     The function uses the forward differencing algorithm described here:
     http://www.niksula.cs.hut.fi/~hkankaan/Homepages/bezierfast.html
     """
@@ -20,16 +20,16 @@ cdef np.ndarray bezier(np.ndarray p_, int steps=30):
     cdef np.ndarray[np.double_t, ndim=2] p=p_, points
     cdef np.ndarray[np.double_t, ndim=1] f, fd, fdd_per_2, fddd_per_2, fddd, \
             fdd, fddd_per_6
-    
+
     f = p[0].copy()
     fd = 3 * (p[1] - p[0]) * t
     fdd_per_2 = 3 * (p[0] - 2 * p[1] + p[2]) * temp
     fddd_per_2 = 3 * (3 * (p[1] - p[2]) + p[3] - p[0]) * temp * t
-    
+
     fddd = 2 * fddd_per_2
     fdd = 2 * fdd_per_2
     fddd_per_6 = fddd_per_2 / 3.0
-    
+
     points = np.empty((steps + 1, 2))
     for i in range(steps + 1):
         points[i] = f

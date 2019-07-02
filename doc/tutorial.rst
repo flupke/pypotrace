@@ -16,7 +16,7 @@ Here is a simple example using pypotrace::
 
     # Trace the bitmap to a path
     path = bmp.trace()
-    
+
     # Iterate over path curves
     for curve in path:
         print "start_point =", curve.start_point
