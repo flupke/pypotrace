@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import subprocess
 from setuptools import setup
 from distutils.extension import Extension
@@ -20,8 +21,12 @@ except ImportError:
     include_dirs = []
 
 
-def get_flags(flags, prefix):
-    return [flag[2:] for flag in flags if str(flag).startswith(prefix)]
+if sys.version_info.major < 3:
+    def get_flags(flags, prefix):
+        return [flag[2:] for flag in flags if str(flag).startswith(prefix)]
+else:
+    def get_flags(flags, prefix):
+        return [flag[2:].decode() for flag in flags if flag.startswith(prefix.encode())]
 
 
 def create_ext_obj(name, sources, cython=False, pkg_config_libs=None, **kwargs):

@@ -5958,7 +5958,11 @@ static PyObject *__pyx_pf_7potrace_8_potrace_potracelib_version(CYTHON_UNUSED Py
  * 
  */
   __Pyx_XDECREF(__pyx_r);
+#if PY_MAJOR_VERSION < 3
   __pyx_t_1 = PyString_FromString(potrace_version()); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 348; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+#else
+  __pyx_t_1 = PyUnicode_FromString(potrace_version()); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 348; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+#endif
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
