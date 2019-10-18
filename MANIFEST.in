@@ -4,5 +4,6 @@ include GPL
 include MANIFEST.in
 include cysetuptools.py
 recursive-include tests *.py
-recursive-include potrace *.py *.pyx *.pxd
 recursive-include doc *
+recursive-include potrace *.py *.pyx *.pxd
+recursive-exclude potrace *.c *.cpp
