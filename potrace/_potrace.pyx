@@ -2,6 +2,7 @@ cimport libc.stdlib
 cimport cpython.bytes
 cimport numpy as np
 from potrace.bezier cimport adaptive_bezier, bezier
+from potrace.backend cimport page_svg
 
 
 import numpy as np
@@ -35,6 +36,7 @@ cdef class Bitmap:
 
     cdef np.ndarray _data
     cdef potrace_bitmap_s po_bitmap
+    cdef public State state
 
     def __init__(self, data):
         self.data = data
@@ -103,10 +105,16 @@ cdef class Bitmap:
                 turnpolicy=turnpolicy, alphamax=alphamax, opticurve=opticurve,
                 opttolerance=opttolerance)
         # Trace bitmap
-        ret = state_from_ptr(potrace_trace(params.po_params, &self.po_bitmap))
-        if not ret.ok:
+        self.state = state_from_ptr(potrace_trace(params.po_params, &self.po_bitmap))
+        if not self.state.ok:
             raise PotraceError("error tracing bitmap")
-        return ret.image
+        return self.state.image
+
+    def to_xml(self):
+        if not self.state:
+            raise ValueError("can't query null state object, first call trace method")
+        return self.state.xml(&self.po_bitmap)
+
 
     property data:
         def __get__(self):
@@ -191,7 +199,16 @@ cdef class State:
             if not self.ok:
                 raise ValueError("can't access the image property of "
                         "an incomplete trace state")
-            return path_from_ptr(self.po_state.plist);            
+            return path_from_ptr(self.po_state.plist)
+
+    cdef xml(self, potrace_bitmap_s *bm):
+        """
+        This method returns a svg as xml string of this state's data.
+        """
+        if not self.ok:
+            raise ValueError("can't access the image property of "
+                    "an incomplete trace state")
+        return xml_from_ptr(self.po_state.plist, bm)
 
 
 cdef class BezierSegment:
@@ -384,6 +401,13 @@ cdef Path path_from_ptr(potrace_path_s *plist):
     # Store tree structure
     init_curves_tree(path.curves_tree, curves_map, plist)
     return path
+
+
+cdef str xml_from_ptr(potrace_path_s *plist, potrace_bitmap_s *bm):
+    """
+    Create a Path instance containing a copy of the paths defined in *plist*.
+    """
+    return page_svg(plist, bm)
 
 
 cdef init_curves_tree(list child_list, dict curves_map, potrace_path_s *plist):

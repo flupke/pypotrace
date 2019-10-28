@@ -37,6 +37,9 @@ cdef extern from "potracelib.h":
 
     struct potrace_dpoint_s:
         double x, y
+
+    struct potrace_point_s:
+        long x, y
     
     struct potrace_curve_s:
         int n
