@@ -20,6 +20,9 @@ The bindings work with input images represented as numpy arrays::
 
     # Trace the bitmap to a path
     path = bmp.trace()
+    
+    # Convert the bitmap to xml
+    xml = bmp.to_xml()
 
     # Iterate over path curves
     for curve in path:
