@@ -2,7 +2,7 @@ cimport libc.stdlib
 cimport cpython.bytes
 cimport numpy as np
 from potrace.bezier cimport adaptive_bezier, bezier
-from potrace.backend cimport page_svg
+from potrace.svg cimport page_svg
 
 
 import numpy as np
