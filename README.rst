@@ -3,6 +3,9 @@ potrace Python bindings
 
 These bindings provide an object oriented API to the `potrace`_ library.
 
+The full API documentation is on `<https://pythonhosted.org/pypotrace/>`_.
+
+
 Example usage
 -------------
 
