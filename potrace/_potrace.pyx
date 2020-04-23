@@ -119,7 +119,7 @@ cdef class Bitmap:
             self.po_bitmap.w = self._data.shape[1]
             self.po_bitmap.h = self._data.shape[0]
             self.po_bitmap.dy = (self.po_bitmap.w + (
-                (N - (self.po_bitmap.w & (N - 1))) & (N - 1))) / N
+                (N - (self.po_bitmap.w & (N - 1))) & (N - 1))) // N
             # Allocate bitmap buffer
             size = self.po_bitmap.h * self.po_bitmap.dy * sizeof(potrace_word)
             self.free_bitmap()
@@ -356,9 +356,9 @@ cdef void setpixel(potrace_bitmap_s *bmp, int x, int y, int on):
     Set a pixel on or off in a potrace_bitmap_s.
     """
     if on:
-        bmp.map[y*bmp.dy + x/N] |=  (1uL << (N - 1 - x % N))
+        bmp.map[y*bmp.dy + x//N] |=  (1uL << (N - 1 - x % N))
     else:
-        bmp.map[y*bmp.dy + x/N] &= ~(1uL << (N - 1 - x % N))
+        bmp.map[y*bmp.dy + x//N] &= ~(1uL << (N - 1 - x % N))
 
 
 cdef State state_from_ptr(potrace_state_s *state):
