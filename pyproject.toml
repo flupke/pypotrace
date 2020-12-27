@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "potrace"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+include = [
+    {path = "potrace/*.pxd"},
+    {path = "potrace/*.pyx"},
+    {path = "potrace/agg/*.pxd"},
+    {path = "potrace/agg/*.pyx"}
+]
+
+[tool.poetry.build]
+script = "build.py"
+generate-setup-file = true
+
+[tool.poetry.dependencies]
+python = "^3.8"
+numpy = "^1.19.4"
+Pillow = "^8.0.1"
+
+[tool.poetry.dev-dependencies]
+Cython = "^0.29.21"
+black = {version = "^20.8b1", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

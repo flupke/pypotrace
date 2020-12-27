@@ -1,8 +1,11 @@
 build
 pypotrace.egg-info
+potrace.egg-info
 dist
 MANIFEST
 *.cpp
 *.c
 *.pyc
 /.eggs
+.venv/
+.vscode/
