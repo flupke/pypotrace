@@ -1,8 +1,23 @@
 [tool.poetry]
 name = "potrace"
-version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+version = "0.2"
+description = "potrace Python bindings"
+readme = "README.rst"
+authors = ["Luper Rouch <luper.rouch@gmail.com>"]
+license = "GPL"
+keywords = ["potrace", "bitmap", "vector", "graphics"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Cython",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion"
+]
 include = [
     {path = "potrace/*.pxd"},
     {path = "potrace/*.pyx"},
