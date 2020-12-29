@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "potrace"
-version = "0.2"
+version = "0.3"
 description = "potrace Python bindings"
 readme = "README.rst"
 authors = ["Luper Rouch <luper.rouch@gmail.com>"]
