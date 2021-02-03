@@ -1,5 +1,3 @@
-import os
-import sys
 import subprocess
 import shlex
 
@@ -15,8 +13,6 @@ def pkg_config(pkg_name, command):
     )
 
 
-
-
 def build(setup_kwargs):
     """Needed for the poetry building interface."""
 
@@ -27,7 +23,6 @@ def build(setup_kwargs):
 
     print(extra_compile_args)
     print(extra_link_args)
-
 
     extensions = [
         Extension(
