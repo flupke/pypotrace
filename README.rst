@@ -42,9 +42,13 @@ Installation
 Ubuntu
 ~~~~~~
 
-Install system dependencies::
+Install system dependencies for python 2::
 
     $ sudo apt-get install build-essential python-dev libagg-dev libpotrace-dev pkg-config
+
+Install system dependencies for python 3::
+
+    $ sudo apt-get install build-essential python-dev-is-python3 libagg-dev libpotrace-dev pkg-config
 
 Install pypotrace::
 
