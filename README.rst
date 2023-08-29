@@ -68,6 +68,15 @@ Install pypotrace::
     $ pip install numpy
     $ pip install .
 
+Arch Linux
+~~~~~~~~~~~~~
+
+| Install system dependencies
+**Note:** The only real challenge is to get a working installation of agg, so oftentimes, you'll have to keep an eye for the right package on `AUR <https://aur.archlinux.org/packages/>`_ ::
+
+    $ pacman -Sy python-setuptools
+    $ yay -Sy agg-2.6-git
+
 OSX
 ~~~
 
